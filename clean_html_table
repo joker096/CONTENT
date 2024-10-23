@@ -1,0 +1,32 @@
+from bs4 import BeautifulSoup
+
+def clean_html_table(html_content):
+    # Парсим HTML с помощью BeautifulSoup
+    soup = BeautifulSoup(html_content, 'html.parser')
+
+    # Удаляем все <style> и <script> теги
+    for tag in soup(['style', 'script']):
+        tag.decompose()
+
+    # Удаляем все атрибуты (например, inline-стили) у тегов
+    for tag in soup.find_all(True):  # True находит все теги
+        tag.attrs = {}  # Очистка всех атрибутов
+
+    # Возвращаем очищенный HTML
+    cleaned_html = soup.prettify()
+    return cleaned_html
+
+# Пример использования
+if __name__ == '__main__':
+    # Чтение HTML-файла
+    with open('input.html', 'r', encoding='utf-8') as file:
+        html_content = file.read()
+
+    # Очистка таблиц и HTML-кода
+    cleaned_html = clean_html_table(html_content)
+
+    # Сохранение результата в новый файл
+    with open('cleaned_output.html', 'w', encoding='utf-8') as file:
+        file.write(cleaned_html)
+
+    print("HTML успешно очищен и сохранён в 'cleaned_output.html'")
